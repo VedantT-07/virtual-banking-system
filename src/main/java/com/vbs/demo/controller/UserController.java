@@ -9,6 +9,7 @@ import com.vbs.demo.repositories.HistoryRepo;
 import com.vbs.demo.repositories.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,6 +21,8 @@ public class UserController {
     UserRepo userRepo;
     @Autowired
     HistoryRepo historyRepo;
+    @Autowired
+    BCryptPasswordEncoder passwordEncoder;
 
     @PostMapping("/register")
     public String register(@RequestBody User user)
@@ -28,6 +31,7 @@ public class UserController {
         {
             return "Username already in use";
         }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepo.save(user);
         History h1 = new History();
         h1.setDescription("User Self Created: "+user.getUsername());
@@ -43,7 +47,7 @@ public class UserController {
         {
             return "User not found";
         }
-        if(!u.getPassword().equals(user.getPassword()))
+        if(!passwordEncoder.matches(u.getPassword(),user.getPassword()))
         {
             return "Incorrect Password!";
         }
