@@ -116,6 +116,7 @@ public class UserController {
         History h1 = new History();
         h1.setDescription("User "+user.getUsername()+" Created by admin "+adminId);
         historyRepo.save(h1);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepo.save(user);
         return "Added successfully";
     }

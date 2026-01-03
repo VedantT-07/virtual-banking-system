@@ -31,4 +31,10 @@ public class Transaction {
     {
         this.date = LocalDateTime.now();
     }
+
+    @Enumerated(EnumType.STRING)
+    TransactionStatus status;
+
+    String failureReason;
+
 }
