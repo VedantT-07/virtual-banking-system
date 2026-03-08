@@ -11,6 +11,10 @@ A full-stack Spring Boot banking platform with secure transactions, role-based a
 - Transaction passbook & system audit logs
 - User management with sorting & search
 - Overdraft prevention, self-transfer blocking
+- Transaction status tracking (**SUCCESS / FAILED**)
+- Failure reason logging for failed transactions
+- Failed transactions recorded in passbook
+- Backend validation preventing cross-account passbook access
 
 ## 🏗️ Tech Stack
 
@@ -25,32 +29,30 @@ A full-stack Spring Boot banking platform with secure transactions, role-based a
 ## 🚀 Quick Start
 
 ### Prerequisites
-```
-Java 17+ | MySQL Server | Maven 3.6+
-```
+
+    Java 17+ | MySQL Server | Maven 3.6+
 
 ### Setup
-```bash
-# 1. Clone & navigate
-git clone <repo-url>
-cd demo
 
-# 2. Create database
-mysql -u root -p
-> CREATE DATABASE springtest;
+    # 1. Clone & navigate
+    git clone <repo-url>
+    cd demo
 
-# 3. Update src/main/resources/application.properties
-spring.datasource.url=jdbc:mysql://localhost:3306/springtest
-spring.datasource.username=root
-spring.datasource.password=your_password
+    # 2. Create database
+    mysql -u root -p
+    > CREATE DATABASE springtest;
 
-# 4. Build & run
-mvn clean package
-mvn spring-boot:run
+    # 3. Update src/main/resources/application.properties
+    spring.datasource.url=jdbc:mysql://localhost:3306/springtest
+    spring.datasource.username=root
+    spring.datasource.password=your_password
 
-# 5. Open browser
-http://localhost:8081
-```
+    # 4. Build & run
+    mvn clean package
+    mvn spring-boot:run
+
+    # 5. Open browser
+    http://localhost:8081
 
 ## 📡 Core API
 
@@ -72,50 +74,45 @@ http://localhost:8081
 
 ## 🔑 Sample Calls
 
-**Register:**
-```bash
-curl -X POST http://localhost:8081/register \
-  -H "Content-Type: application/json" \
-  -d '{"username":"john","password":"pass123","email":"john@example.com","name":"John","role":"customer","balance":0}'
-```
+**Register**
 
-**Deposit:**
-```bash
-curl -X POST http://localhost:8081/deposit \
-  -H "Content-Type: application/json" \
-  -d '{"id":1,"amount":500}'
-```
+    curl -X POST http://localhost:8081/register \
+      -H "Content-Type: application/json" \
+      -d '{"username":"john","password":"pass123","email":"john@example.com","name":"John","role":"customer","balance":0}'
 
-**Transfer:**
-```bash
-curl -X POST http://localhost:8081/transfer \
-  -H "Content-Type: application/json" \
-  -d '{"id":1,"username":"jane","amount":100}'
-```
+**Deposit**
+
+    curl -X POST http://localhost:8081/deposit \
+      -H "Content-Type: application/json" \
+      -d '{"id":1,"amount":500}'
+
+**Transfer**
+
+    curl -X POST http://localhost:8081/transfer \
+      -H "Content-Type: application/json" \
+      -d '{"id":1,"username":"jane","amount":100}'
 
 ## 📊 Data Models
 
 | Entity | Fields |
 |--------|--------|
 | **User** | id, username (unique), password, email (unique), name, role, balance |
-| **Transaction** | id, userId, amount, currBalance, description, date (auto) |
+| **Transaction** | id, userId, amount, currBalance, description, date (auto), status, failureReason |
 | **History** | id, description, date (auto) |
 
 ## 📂 Project Structure
 
-```
-demo/
-├── src/main/java/com/vbs/demo/
-│   ├── controller/       (UserController, TransactionController, HistoryController)
-│   ├── models/           (User, Transaction, History)
-│   ├── dto/              (LoginDto, TransactionDto, TransferDto, UpdateDto, DisplayDto)
-│   └── repositories/     (UserRepo, TransactionRepo, HistoryRepo)
-├── src/main/resources/
-│   ├── application.properties
-│   └── static/           (HTML pages: login, signup, dashboard, admin, history, etc.)
-├── pom.xml
-└── README.md
-```
+    demo/
+    ├── src/main/java/com/vbs/demo/
+    │   ├── controller/       (UserController, TransactionController, HistoryController)
+    │   ├── models/           (User, Transaction, History)
+    │   ├── dto/              (LoginDto, TransactionDto, TransferDto, UpdateDto, DisplayDto)
+    │   └── repositories/     (UserRepo, TransactionRepo, HistoryRepo)
+    ├── src/main/resources/
+    │   ├── application.properties
+    │   └── static/           (HTML pages: login, signup, dashboard, admin, history, etc.)
+    ├── pom.xml
+    └── README.md
 
 ## 🔒 Security
 
@@ -125,9 +122,9 @@ demo/
 ✅ Auto-audit logging  
 ✅ CORS enabled  
 ✅ Unique constraints (username, email)  
+✅ Backend validation preventing cross-account passbook access  
 
 ## 🎯 Workflows
 
 **Customer**: Register → Login → Dashboard → Deposit/Withdraw/Transfer → Passbook  
 **Admin**: Login (admin role) → Admin Panel → Manage Users → View History
-
