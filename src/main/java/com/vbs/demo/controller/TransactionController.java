@@ -7,6 +7,7 @@ import com.vbs.demo.models.TransactionStatus;
 import com.vbs.demo.models.User;
 import com.vbs.demo.repositories.UserRepo;
 import com.vbs.demo.repositories.TransactionRepo;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -137,8 +138,18 @@ public class TransactionController {
     }
 
     @GetMapping("/passbook/{id}")
-    public List<Transaction> passbook(@PathVariable int id)
+    public List<Transaction> passbook(@PathVariable int id, HttpSession session)
     {
+        User user = (User) session.getAttribute("loggedInUser");
+
+        if(user==null)
+        {
+            throw new RuntimeException("Unauthorized");
+        }
+        if(user.getId()!=id)
+        {
+            throw new RuntimeException("Unauthorized access");
+        }
         return transactionRepo.findAllByUserId(id);
     }
 }

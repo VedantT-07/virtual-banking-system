@@ -7,6 +7,7 @@ import com.vbs.demo.models.History;
 import com.vbs.demo.models.User;
 import com.vbs.demo.repositories.HistoryRepo;
 import com.vbs.demo.repositories.UserRepo;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -31,6 +32,10 @@ public class UserController {
         {
             return "Username already in use";
         }
+        if(userRepo.existsByEmail(user.getEmail())) //extra
+        {
+            return "Email already exists";
+        }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepo.save(user);
         History h1 = new History();
@@ -40,7 +45,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody LoginDto u)
+    public String login(@RequestBody LoginDto u, HttpSession session)
     {
         User user = userRepo.findByUsername(u.getUsername());
         if(user==null)
@@ -55,13 +60,23 @@ public class UserController {
         {
             return "Incorrect Role!";
         }
+        session.setAttribute("loggedInUser", user);
         return String.valueOf(user.getId());
     }
 
     @GetMapping("/get-details/{id}")
-    public DisplayDto display(@PathVariable int id)
+    public DisplayDto display(@PathVariable int id, HttpSession session)
     {
-        User user = userRepo.findById(id).orElseThrow(()->new RuntimeException("User not found!"));
+        User sessionUser = (User) session.getAttribute("loggedInUser");
+
+        if(sessionUser == null)
+            throw new RuntimeException("Unauthorized");
+
+        if(sessionUser.getId() != id)
+            throw new RuntimeException("Unauthorized access");
+
+        User user = userRepo.findById(id)
+                .orElseThrow(()->new RuntimeException("User not found!"));
         DisplayDto displayDto = new DisplayDto();
         displayDto.setUsername(user.getUsername());
         displayDto.setBalance(user.getBalance());
@@ -111,8 +126,16 @@ public class UserController {
     }
 
     @PostMapping("/add/{adminId}")
-    public String add(@RequestBody User user, @PathVariable int adminId)
+    public String add(@RequestBody User user, @PathVariable int adminId, HttpSession session)
     {
+        User sessionUser = (User) session.getAttribute("loggedInUser");
+
+        if(sessionUser == null)
+            throw new RuntimeException("Unauthorized");
+
+        if(!sessionUser.getRole().equals("admin"))
+            throw new RuntimeException("Admin access required");
+
         History h1 = new History();
         h1.setDescription("User "+user.getUsername()+" Created by admin "+adminId);
         historyRepo.save(h1);
@@ -140,8 +163,16 @@ public class UserController {
     }
 
     @DeleteMapping("/delete-user/{userId}/admin/{adminId}")
-    public String deleteUser(@PathVariable int userId, @PathVariable int adminId)
+    public String deleteUser(@PathVariable int userId, @PathVariable int adminId, HttpSession session)
     {
+        User sessionUser = (User) session.getAttribute("loggedInUser");
+
+        if(sessionUser == null)
+            throw new RuntimeException("Unauthorized");
+
+        if(!sessionUser.getRole().equals("admin"))
+            throw new RuntimeException("Admin access required");
+
         User user = userRepo.findById(userId).orElseThrow(()->new RuntimeException("Not Found!"));
         History h1 = new History();
         h1.setDescription("User "+user.getUsername()+" is deleted by admin "+adminId);
