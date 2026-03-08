@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Virtual Banking System - Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -12,214 +14,405 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0a1628 0%, #1a2847 50%, #2d1b4e 100%);
             min-height: 100vh;
             padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Animated background glow effect */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(102, 126, 234, 0.15) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: -1;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(30px, 30px); }
         }
 
         .container {
             width: 100%;
-            max-width: 900px;
+            max-width: 1000px;
             margin: 0 auto;
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 24px;
+            box-shadow:
+                0 0 60px rgba(102, 126, 234, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
             overflow: hidden;
         }
 
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
+            backdrop-filter: blur(20px);
             padding: 30px;
             color: white;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.5), transparent);
         }
 
         .header-left h1 {
-            font-size: 28px;
+            font-size: 32px;
+            font-weight: 800;
             margin-bottom: 5px;
+            background: linear-gradient(135deg, #667eea 0%, #a78bfa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .header-left p {
-            font-size: 14px;
-            opacity: 0.9;
+            font-size: 13px;
+            opacity: 0.7;
+            letter-spacing: 1px;
+            font-weight: 500;
         }
 
-
         .logout-btn {
-            padding: 10px 20px;
-            background: rgba(255, 255, 255, 0.2);
+            padding: 10px 24px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
             color: white;
-            border: 2px solid white;
-            border-radius: 8px;
+            border: 1.5px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
             cursor: pointer;
             font-weight: 600;
-            transition: all 0.3s;
+            font-size: 14px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .logout-btn:hover {
-            background: white;
-            color: #667eea;
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
+            transform: translateY(-2px);
         }
 
         .content {
-            padding: 40px 30px;
+            padding: 50px 40px;
         }
 
         .dashboard-header {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 50px;
         }
 
         .dashboard-header h2 {
-            color: #333;
-            font-size: 24px;
+            color: white;
+            font-size: 32px;
             margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .dashboard-header p {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+            letter-spacing: 0.5px;
         }
 
         .user-info {
-            background: #f8f9fa;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
             padding: 20px;
-            border-radius: 8px;
+            border-radius: 16px;
             margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .user-info p {
-            color: #666;
+            color: rgba(255, 255, 255, 0.7);
             margin: 8px 0;
             font-size: 14px;
         }
 
         .user-info strong {
-            color: #333;
+            color: #a78bfa;
+            font-weight: 600;
         }
 
         .account-balance {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.25) 0%, rgba(168, 139, 250, 0.25) 100%);
+            backdrop-filter: blur(20px);
             color: white;
-            padding: 30px;
-            border-radius: 12px;
+            padding: 40px;
+            border-radius: 20px;
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 50px;
+            border: 1.5px solid rgba(167, 139, 250, 0.3);
+            box-shadow:
+                0 0 40px rgba(102, 126, 234, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .account-balance::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            pointer-events: none;
         }
 
         .account-balance p {
-            font-size: 14px;
-            opacity: 0.9;
-            margin-bottom: 10px;
+            font-size: 13px;
+            opacity: 0.85;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+            font-weight: 500;
         }
 
         .balance-amount {
-            font-size: 36px;
-            font-weight: bold;
+            font-size: 48px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffffff 0%, #a78bfa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .transaction-buttons {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin-bottom: 40px;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 20px;
+            margin-bottom: 50px;
         }
 
         .btn {
-            padding: 15px;
+            padding: 28px 20px;
             border: none;
-            border-radius: 8px;
-            font-size: 16px;
+            border-radius: 18px;
+            font-size: 15px;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             font-weight: 600;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 10px;
-        }
-
-        .btn-withdraw {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            border: 1.5px solid rgba(255, 255, 255, 0.1);
             color: white;
+            position: relative;
+            overflow: hidden;
         }
 
-        .btn-withdraw:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(245, 87, 108, 0.4);
+        .btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at center, rgba(255, 255, 255, 0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
         }
 
-        .btn-deposit {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            color: white;
-        }
-
-        .btn-deposit:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(79, 172, 254, 0.4);
-        }
-
-        .btn-transfer {
-            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-            color: white;
-        }
-
-        .btn-transfer:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(67, 233, 123, 0.4);
+        .btn:hover::before {
+            opacity: 1;
         }
 
         .btn-icon {
-            font-size: 24px;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            font-size: 22px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .btn-withdraw {
+            border-color: rgba(245, 87, 108, 0.3);
+        }
+
+        .btn-withdraw .btn-icon {
+            background: linear-gradient(135deg, rgba(245, 87, 108, 0.3) 0%, rgba(240, 147, 251, 0.3) 100%);
+            border-color: rgba(245, 87, 108, 0.5);
+            color: #ff6b9d;
+        }
+
+        .btn-withdraw:hover {
+            background: rgba(245, 87, 108, 0.15);
+            border-color: rgba(245, 87, 108, 0.5);
+            box-shadow: 0 12px 40px rgba(245, 87, 108, 0.3);
+            transform: translateY(-4px);
+        }
+
+        .btn-withdraw:hover .btn-icon {
+            box-shadow: 0 8px 24px rgba(245, 87, 108, 0.4);
+        }
+
+        .btn-deposit {
+            border-color: rgba(79, 172, 254, 0.3);
+        }
+
+        .btn-deposit .btn-icon {
+            background: linear-gradient(135deg, rgba(79, 172, 254, 0.3) 0%, rgba(0, 242, 254, 0.3) 100%);
+            border-color: rgba(79, 172, 254, 0.5);
+            color: #00d4ff;
+        }
+
+        .btn-deposit:hover {
+            background: rgba(79, 172, 254, 0.15);
+            border-color: rgba(79, 172, 254, 0.5);
+            box-shadow: 0 12px 40px rgba(79, 172, 254, 0.3);
+            transform: translateY(-4px);
+        }
+
+        .btn-deposit:hover .btn-icon {
+            box-shadow: 0 8px 24px rgba(79, 172, 254, 0.4);
+        }
+
+        .btn-transfer {
+            border-color: rgba(67, 233, 123, 0.3);
+        }
+
+        .btn-transfer .btn-icon {
+            background: linear-gradient(135deg, rgba(67, 233, 123, 0.3) 0%, rgba(56, 249, 215, 0.3) 100%);
+            border-color: rgba(67, 233, 123, 0.5);
+            color: #00ff88;
+        }
+
+        .btn-transfer:hover {
+            background: rgba(67, 233, 123, 0.15);
+            border-color: rgba(67, 233, 123, 0.5);
+            box-shadow: 0 12px 40px rgba(67, 233, 123, 0.3);
+            transform: translateY(-4px);
+        }
+
+        .btn-transfer:hover .btn-icon {
+            box-shadow: 0 8px 24px rgba(67, 233, 123, 0.4);
+        }
+
+        .btn-passbook {
+            border-color: rgba(251, 191, 36, 0.3);
+        }
+
+        .btn-passbook .btn-icon {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.3) 0%, rgba(245, 158, 11, 0.3) 100%);
+            border-color: rgba(251, 191, 36, 0.5);
+            color: #fbbf24;
+        }
+
+        .btn-passbook:hover {
+            background: rgba(251, 191, 36, 0.15);
+            border-color: rgba(251, 191, 36, 0.5);
+            box-shadow: 0 12px 40px rgba(251, 191, 36, 0.3);
+            transform: translateY(-4px);
+        }
+
+        .btn-passbook:hover .btn-icon {
+            box-shadow: 0 8px 24px rgba(251, 191, 36, 0.4);
+        }
+
+        .btn-profile {
+            border-color: rgba(168, 139, 250, 0.3);
+        }
+
+        .btn-profile .btn-icon {
+            background: linear-gradient(135deg, rgba(168, 139, 250, 0.3) 0%, rgba(167, 139, 250, 0.3) 100%);
+            border-color: rgba(168, 139, 250, 0.5);
+            color: #d8b4fe;
+        }
+
+        .btn-profile:hover {
+            background: rgba(168, 139, 250, 0.15);
+            border-color: rgba(168, 139, 250, 0.5);
+            box-shadow: 0 12px 40px rgba(168, 139, 250, 0.3);
+            transform: translateY(-4px);
+        }
+
+        .btn-profile:hover .btn-icon {
+            box-shadow: 0 8px 24px rgba(168, 139, 250, 0.4);
         }
 
         .transactions-section {
-            background: #f8f9fa;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
             padding: 30px;
-            border-radius: 12px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: none;
         }
 
         .transactions-section h3 {
-            color: #333;
+            color: white;
             margin-bottom: 20px;
             font-size: 18px;
+            font-weight: 700;
         }
 
         .transaction-item {
-            background: white;
+            background: rgba(255, 255, 255, 0.05);
             padding: 15px;
-            border-radius: 8px;
+            border-radius: 12px;
             margin-bottom: 10px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-left: 4px solid #667eea;
+            border-left: 3px solid rgba(167, 139, 250, 0.5);
         }
 
         .transaction-info p {
             margin: 3px 0;
             font-size: 14px;
+            color: rgba(255, 255, 255, 0.8);
         }
 
         .transaction-info .type {
-            color: #333;
+            color: white;
             font-weight: 600;
         }
 
         .transaction-info .date {
-            color: #999;
+            color: rgba(255, 255, 255, 0.5);
             font-size: 12px;
         }
 
         .transaction-amount {
-            font-weight: bold;
+            font-weight: 700;
             font-size: 16px;
         }
 
         .transaction-amount.debit {
-            color: #f5576c;
+            color: #ff6b9d;
         }
 
         .transaction-amount.credit {
-            color: #43e97b;
+            color: #00ff88;
         }
 
         .modal {
@@ -231,6 +424,7 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
             align-items: center;
             justify-content: center;
         }
@@ -240,19 +434,23 @@
         }
 
         .modal-content {
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            max-width: 400px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(30px);
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 420px;
             width: 90%;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            box-shadow:
+                0 20px 60px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
         }
 
         .modal-header {
-            font-size: 20px;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 20px;
+            font-size: 22px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 25px;
         }
 
         .form-group {
@@ -262,77 +460,103 @@
         .form-group label {
             display: block;
             margin-bottom: 8px;
-            color: #333;
-            font-weight: 500;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 600;
             font-size: 14px;
+            letter-spacing: 0.5px;
         }
 
-        .form-group input {
+        .form-group input,
+        .form-group select {
             width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
+            padding: 12px 16px;
+            border: 1.5px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
             font-size: 14px;
-            transition: border-color 0.3s;
+            transition: all 0.3s;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            color: white;
+            font-family: 'Manrope', sans-serif;
         }
 
-        .form-group input:focus {
+        .form-group input::placeholder,
+        .form-group select {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: rgba(167, 139, 250, 0.6);
+            background: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .form-group select option {
+            background: #1a1a2e;
+            color: white;
         }
 
         .modal-buttons {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             justify-content: flex-end;
+            margin-top: 30px;
         }
 
         .btn-modal {
-            padding: 10px 20px;
+            padding: 12px 24px;
             border: none;
-            border-radius: 8px;
+            border-radius: 12px;
             cursor: pointer;
             font-weight: 600;
-            transition: all 0.3s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 14px;
         }
 
         .btn-submit {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #667eea 0%, #a78bfa 100%);
             color: white;
+            border: 1.5px solid transparent;
         }
 
         .btn-submit:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 12px 32px rgba(102, 126, 234, 0.4);
         }
 
         .btn-cancel {
-            background: #f0f0f0;
-            color: #333;
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.8);
+            border: 1.5px solid rgba(255, 255, 255, 0.2);
         }
 
         .btn-cancel:hover {
-            background: #e0e0e0;
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
         }
 
         .message {
-            padding: 12px;
-            border-radius: 8px;
+            padding: 16px;
+            border-radius: 12px;
             margin-bottom: 20px;
             font-size: 14px;
             display: none;
+            font-weight: 500;
+            backdrop-filter: blur(10px);
         }
 
         .message.success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
+            background: rgba(34, 197, 94, 0.15);
+            color: #86efac;
+            border: 1.5px solid rgba(34, 197, 94, 0.3);
         }
 
         .message.error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
+            background: rgba(239, 68, 68, 0.15);
+            color: #fca5a5;
+            border: 1.5px solid rgba(239, 68, 68, 0.3);
         }
 
         .message.show {
@@ -341,92 +565,91 @@
 
         .empty-state {
             text-align: center;
-            color: #999;
-            padding: 20px;
+            color: rgba(255, 255, 255, 0.5);
+            padding: 40px 20px;
+            font-size: 14px;
         }
-        .btn-action {
-    color: white;
-    font-weight: 600;
-    border-radius: 8px;
-    transition: all 0.3s ease;
-}
 
-.btn-action:hover {
-    transform: translateY(-2px);
-}
+        @media (max-width: 768px) {
+            .content {
+                padding: 30px 20px;
+            }
 
-.btn-passbook {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-}
+            .transaction-buttons {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
 
-.btn-passbook:hover {
-    box-shadow: 0 6px 18px rgba(102, 126, 234, 0.45);
-}
-
-
-        @media (max-width: 600px) {
             .header {
                 flex-direction: column;
                 gap: 15px;
                 text-align: center;
             }
 
-            .transaction-buttons {
-                grid-template-columns: 1fr;
+            .header-left h1 {
+                font-size: 28px;
+            }
+
+            .dashboard-header h2 {
+                font-size: 24px;
+            }
+
+            .balance-amount {
+                font-size: 36px;
             }
 
             .transaction-item {
                 flex-direction: column;
                 align-items: flex-start;
+                gap: 10px;
             }
 
             .transaction-amount {
                 align-self: flex-end;
             }
-            btn-action {
-                color: white;
-                font-weight: 600;
-                border-radius: 8px;
-                transition: all 0.3s ease;
+
+            .modal-content {
+                padding: 30px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
             }
 
-            .btn-action:hover {
-                transform: translateY(-2px);
-            }
-            .btn-withdraw {
-                background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            .container {
+                border-radius: 16px;
             }
 
-            .btn-withdraw:hover {
-                box-shadow: 0 6px 18px rgba(245, 87, 108, 0.4);
+            .content {
+                padding: 20px 15px;
             }
 
-            .btn-deposit {
-                background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            .transaction-buttons {
+                grid-template-columns: 1fr;
+                gap: 12px;
             }
 
-            .btn-deposit:hover {
-                box-shadow: 0 6px 18px rgba(79, 172, 254, 0.4);
+            .btn {
+                padding: 24px 16px;
             }
 
-            .btn-transfer {
-                background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            .header-left h1 {
+                font-size: 24px;
             }
 
-            .btn-transfer:hover {
-                box-shadow: 0 6px 18px rgba(67, 233, 123, 0.4);
+            .dashboard-header h2 {
+                font-size: 20px;
             }
 
-            .btn-passbook {
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            .account-balance {
+                padding: 30px 20px;
             }
 
-            .btn-passbook:hover {
-                box-shadow: 0 6px 18px rgba(102, 126, 234, 0.45);
+            .balance-amount {
+                font-size: 32px;
             }
-
-
         }
     </style>
 </head>
@@ -456,26 +679,29 @@
 
         <div class="transaction-buttons">
             <button class="btn btn-action btn-withdraw" onclick="openWithdrawModal()">
-                Withdraw
+                <div class="btn-icon">↓</div>
+                <span>Withdraw</span>
             </button>
 
             <button class="btn btn-action btn-deposit" onclick="openDepositModal()">
-                Deposit
+                <div class="btn-icon">↑</div>
+                <span>Deposit</span>
             </button>
 
             <button class="btn btn-action btn-transfer" onclick="openTransferModal()">
-                Transfer
+                <div class="btn-icon">⇄</div>
+                <span>Transfer</span>
             </button>
 
             <button class="btn btn-action btn-passbook" onclick="goToPassbook()">
-                Passbook
+                <div class="btn-icon">📖</div>
+                <span>Passbook</span>
             </button>
 
-            <button class="btn btn-action btn-passbook" onclick="openUpdateModal()">
-                Update Profile
+            <button class="btn btn-action btn-profile btn-passbook" onclick="openUpdateModal()">
+                <div class="btn-icon">👤</div>
+                <span>Profile</span>
             </button>
-
-
         </div>
     </div>
 </div>
@@ -774,8 +1000,7 @@
 
 
     function goToPassbook() {
-        window.location.href =
-            `passbook.html?id=${userId}&role=${encodeURIComponent(role)}`;
+        window.location.href = "passbook.html";
     }
 
 
@@ -789,10 +1014,12 @@
         const withdrawModal = document.getElementById('withdrawModal');
         const depositModal = document.getElementById('depositModal');
         const transferModal = document.getElementById('transferModal');
+        const updateModal = document.getElementById('updateModal');
 
         if (e.target === withdrawModal) withdrawModal.classList.remove('show');
         if (e.target === depositModal) depositModal.classList.remove('show');
         if (e.target === transferModal) transferModal.classList.remove('show');
+        if (e.target === updateModal) updateModal.classList.remove('show');
     });
 
     document.getElementById('updateForm').addEventListener('submit', async (e) => {
